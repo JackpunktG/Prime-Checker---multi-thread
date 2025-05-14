@@ -1,4 +1,4 @@
-
+import java.io.IOException;
 
 public class main
 {
@@ -38,19 +38,21 @@ public class main
         return true;
     }
 
-    public static void main (String[] args)
+    public static void main (String[] args) throws IOException
     {
         int options = 1; //1 RANGE MODE - 2 SINGLE SEARCH
+
+        Writer Log = new Writer("writer_output.xls");
 
         switch (options) {
             case 1: {  //Range MODE
 
                 prime.option = 1;
 
-                long primeRangeLower = 0;
-                long primeRangeUpper = 1000;
+                long primeRangeLower = 1;
+                long primeRangeUpper = 100;
 
-
+                Writer.writeLine("\t\t\t\t### RANGE MODE ###\n\t\t\tRange:\t" + primeRangeLower +"\t" + primeRangeUpper + "\n\nThread Total\tPRIMES\tThread No.\tDuration(milliseconds)");
 
                 int threadMAX = 8;              // 1 Thread will just be main
                 int threadNumber;
@@ -60,6 +62,7 @@ public class main
                     long primeLower = primeRangeLower;
                     long primeUpper = primeRangeUpper;
 
+                    Writer.writeLine("\t\t\t\t## Search ##\tThreads: " + threadNumber);
 
                     long startTime = System.nanoTime();             //Starting timer
                     int addThreads = threadNumber - 1;              // -1 because main is already thread
@@ -91,7 +94,7 @@ public class main
 
 
                     for (primeLower = primeLower; primeLower <= primeUpper; primeLower++) {         //Main thread test
-                        if (isprime(primeLower) == true) System.out.println(primeLower + " is PRIME!!" + " by thread: " + Thread.currentThread().getName());
+                        if (isprime(primeLower) == true) Log.writeLine(threadNumber + "\t" + primeLower + "\t1");
 
                     }
 
@@ -114,8 +117,14 @@ public class main
                     long seconds = totalSeconds % 60;
                     long milliseconds = durationInMillis % 1000;
 
-                    System.out.println("Execution time for prime check between " + primeRangeLower + " - " + primeRangeUpper + " in: " + minutes + " min " + seconds + " sec " + milliseconds + " ms using " + threadNumber + " threads");
-                    System.out.println();                   //Giving the time for each amount thread
+                    //System.out.println("Execution time for prime check between " + primeRangeLower + " - " + primeRangeUpper + " in: " + minutes + " min " + seconds + " sec " + milliseconds + " ms using " + threadNumber + " threads");
+                    //System.out.println();                   //Giving the time for each amount thread
+
+                    Writer.writeLine("\t\t\t" + durationInMillis +"\tDuration in Milliseconds");
+                    Log.newLine();
+                    Log.writeLine("\t\t\t\tExecution time for prime check between\t" + primeRangeLower + "\t - \t" + primeRangeUpper + "\t in: \t" + minutes + "\t min \t" + seconds + "\t sec \t" + milliseconds + "\t ms\t" + threadNumber + "\t threads");
+                    Log.newLine();
+                    Log.newLine();
                     prime.ID = 2;
                 }
 
@@ -208,5 +217,6 @@ public class main
                 }
             }
         }
+        Log.close();
     }
 }

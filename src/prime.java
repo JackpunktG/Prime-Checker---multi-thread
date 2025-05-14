@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 class prime implements Runnable
 {
 
@@ -9,11 +11,12 @@ class prime implements Runnable
 
     public static long singlePrime = 0;        // Prime for single number search
 
-    prime(long lower, long upper)
+    prime(long lower, long upper) throws IOException
     {
         setprime(lower, upper);
-        t = new Thread(this, "No." + ID + " " + lower + " - " + upper);         // name is the range of numbers given to either search if prime, or check against prime
-        System.out.println(t);
+        //t = new Thread(this, "No." + ID + " " + lower + " - " + upper);         // name is the range of numbers given to either search if prime, or check against prime
+        t = new Thread(this, "" + ID);   //ease for printing to excel
+        Writer.writeLine("\t\t\t\t" + t + "\t" + lower + " - " + upper);
         ID++;
 
     }
@@ -54,12 +57,19 @@ class prime implements Runnable
     {
         if (option == 1) {
             for (primeLower = primeLower; primeLower <= primeUpper; primeLower++) {
-                if (isprime(primeLower) == true) System.out.println(primeLower + " is PRIME!!" + " by thread: " + Thread.currentThread().getName()); //Input is number to be checked
+              //  if (isprime(primeLower) == true) System.out.println(primeLower + " is PRIME!!" + " by thread: " + Thread.currentThread().getName());    //Input is number to be checked
+                if (isprime(primeLower) == true) {
+                    try {
+                        Writer.writeLine((ID -1) + "\t" + primeLower + "\t"+ t.getName());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
         if (option == 2) {
             if (isprimeSingle(primeUpper, primeLower) == false) {                       //Input is range from lower to higher
-                    System.out.println(primeUpper + " Nope... not prime. Found by Thread: " + ID);
+                    System.out.println(primeUpper + " Nope... not prime. Found by Thread: " + (ID -1));
                 }
 
             }
