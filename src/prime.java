@@ -69,9 +69,20 @@ class prime implements Runnable
         }
         if (option == 2) {
             if (isprimeSingle(primeUpper, primeLower) == false) {                       //Input is range from lower to higher
-                    System.out.println(primeUpper + " Nope... not prime. Found by Thread: " + (ID -1));
+                    //System.out.println(primeUpper + " Nope... not prime. Found by Thread: " + (ID -1));
+                try {
+                    Writer.writeLine("NOT PRIME\t" + primeUpper + "FACTOR FOUND!!!\tFound by\t" + t.getName() + "\t" + t);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-
+            } else {
+                try {
+                    Writer.writeLine("\t\t\tThread: " + t.getName() + "\tOK\tChecked complete with no factors found");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
+        }
     }
 }

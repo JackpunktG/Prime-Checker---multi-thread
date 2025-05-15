@@ -40,14 +40,14 @@ public class main
 
     public static void main (String[] args) throws IOException
     {
-        int options = 1; //1 RANGE MODE - 2 SINGLE SEARCH
+        int options = 2; //1 RANGE MODE - 2 SINGLE SEARCH
 
-        Writer Log = new Writer("writer_output.xls");
+        Writer Log = new Writer("writer_output.xls");           //Opens ein file for the writer to write to
 
         switch (options) {
             case 1: {  //Range MODE
 
-                prime.option = 1;
+                prime.option = 2;
 
                 long primeRangeLower = 1;
                 long primeRangeUpper = 100;
@@ -134,14 +134,18 @@ public class main
 
                 prime.option = 2;
 
-                //long[] tests = {7, 11, 53, 83, 101, 577, 1009, 2017, 5003, 10007, 15013, 20011, 50021, 100003, 500009, 1000003, 2000003, 5000011, 10000019};
-                long[] tests = {10000000069L};                      //enter the numbers or number you'd like to check
+                //long[] tests = {7, 11, 53, 83, 101, 577, 1009, 2017, 5003, 10007, 15013, 20011, 50021, 100003, 500009, 1000003, 2000003, 5000011, 10000019, 1000000005721L};
+                long[] tests = {20000000089L, 20500000091L, 40500000161L, 60500000123L, 80500000111L, 100500000109L};                      //enter the numbers or number you'd like to check
+
+                Writer.writeLine("\t\t\t\t#### SEEKER MODE ####\n\nPRIME\tNo. of threads\tTime(milliseconds)\n");
+
 
                 for (int j = 0; j < tests.length; j++) {
 
                     int threadMAX = 8;                          // threads number
                     int threadNumber;
 
+                    Writer.writeLine("\t\t\t checking number\t!!" + tests[j] +"!!\t from 1 to " + threadMAX + " threads\n");
 
                     for (threadNumber = 1; threadNumber <= threadMAX; threadNumber++) {
 
@@ -186,7 +190,9 @@ public class main
                         if (threadNumber == 1) amount /= 2;     //for main thread only to give correct test range
 
                         if (isprimeSingle(tests[j], amount) == false) {         //input is Prime check and the range
-                            System.out.println(tests[j] + " Nope... not prime. ");
+                            Writer.writeLine("NOT PRIME\t" + primeUpper + "FACTOR FOUND!!!\tFound by\t1\tMain");
+                        } else {
+                            Writer.writeLine("\t\t\t" + "Thread: 1" + "\tOK\tChecked complete with no factors found");
                         }
 
 
@@ -210,8 +216,14 @@ public class main
                         long seconds = totalSeconds % 60;
                         long milliseconds = durationInMillis % 1000;
 
-                        System.out.println("Execution time for prime check of " + tests[j] + ": " + minutes + " min " + seconds + " sec " + milliseconds + " ms using " + threadNumber + " threads");
-                        System.out.println();                   //Giving the time for each thread
+                        Writer.writeLine(tests[j] + "\t" + threadNumber + "\t" + durationInMillis + "\tDuration in Milliseconds");
+                        Log.newLine();
+                        Log.writeLine("\t\t\t\tExecution time for prime check of " + tests[j] + "\t in: \t" + minutes + "\t min \t" + seconds + "\t sec \t" + milliseconds + "\t ms\t" + threadNumber + "\t threads");
+                        Log.newLine();
+                        Log.newLine();                 //Giving the time for each thread
+
+                        System.out.println("Execution time for prime check of " + tests[j] + " in: " + minutes + " min " + seconds + " sec " + milliseconds + " ms using: " + threadNumber + " threads!!");
+
                         prime.ID = 2;
                     }
                 }
